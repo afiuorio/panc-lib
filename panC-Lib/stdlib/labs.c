@@ -10,7 +10,7 @@
 
 /*A very simple abs implementation that don' t use if statement*/
 
-int labs(long n)
+long labs(long n)
 {
 	int t = (unsigned int)n >> (sizeof(long)* 8 -1);
 	return ( -t) ^ (n-t);
