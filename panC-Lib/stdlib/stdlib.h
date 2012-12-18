@@ -12,6 +12,8 @@
 
 void srand(unsigned int seed);
 int rand();
+int labs(long n);
+int abs(int n);
 
 
 
