@@ -27,12 +27,11 @@ void *splitChunck(struct __memoryChunck *c, unsigned int requestByte){
 	struct __memoryChunck *new;
 	new = c->data + requestByte;
 
-	printf("Vecchio Chunck = %d %d %d %d\n", c, c->data, c->next,c->size);
 	new->free = 1;
 	new->next = c->next;
 	new->data = (void *)new + sizeof(struct __memoryChunck);
 	new->size = c->size - requestByte - sizeof(struct __memoryChunck);
-	printf("Nuovo Chunck = %d %d %d %d\n", new, new->data, new->next,new->size);
+
 	c->next = new;
 	c->size = requestByte;
 	c->free = 0;
@@ -50,7 +49,6 @@ void *requireNewChunck(){
 	 new->free = 1;
 	 new->next = NULL;
 
-	 printf("Allocato Nuovo Chunck = %d %d %d %d\n", new, new->data, new->next,new->size);
 	 return new;
 }
 
