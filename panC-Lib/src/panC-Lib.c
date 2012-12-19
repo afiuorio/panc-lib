@@ -6,17 +6,19 @@
 
 
 int main(void) {
+register int i;
+
+	int *newHeap = malloc(13);
+	printf("%X\n",newHeap);
+	newHeap = malloc(13);
+		printf("%X\n",newHeap);
+		newHeap[0] = 4;
+		printf("%d\n",newHeap[0]);
+		newHeap = malloc(13);
+			printf("%X\n",newHeap);
 
 
-	void *newHeap;
 
-	newHeap = malloc(12);
-		printf("%d\n",newHeap);
-		void * newHeap2 = malloc(12);
-			printf("%d\n",newHeap2);
-			printf("%d\n",newHeap2 - newHeap);
-			newHeap = malloc(12);
-			printf("%d\n",newHeap);
 
 
 	return 0;

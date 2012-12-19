@@ -36,7 +36,7 @@ void *splitChunck(struct __memoryChunck *c, unsigned int requestByte){
 	c->size = requestByte;
 	c->free = 0;
 
-	return c;
+	return c->data;
 }
 
 void *requireNewChunck(){
@@ -52,8 +52,17 @@ void *requireNewChunck(){
 	 return new;
 }
 
-static void *requestChunck(unsigned int requestByte){
+void *malloc(size_t size){
 	struct __memoryChunck *p , *prec;
+
+	if(size > BASEALLOC){
+		p = HeapAlloc(GetProcessHeap(), 0, size);
+		p->next = NULL;
+		p->size = size;
+		p->free = 0;
+		p->data = (void *)p + sizeof(struct __memoryChunck);
+		return p->data;
+	}
 
 	p = poolChunck;
 
@@ -73,12 +82,12 @@ static void *requestChunck(unsigned int requestByte){
 		}
 
 
-		if(p->size == requestByte && p->free == 1){
+		if(p->size == size && p->free == 1){
 			p->free = 0;
 			return p->data;
 		}
-		else if(p->size > requestByte && p->free ==1)
-			return splitChunck(p,requestByte);
+		else if(p->size > size && p->free ==1)
+			return splitChunck(p,size);
 		else{
 			prec = p;
 			p = p->next;
@@ -90,6 +99,3 @@ static void *requestChunck(unsigned int requestByte){
 }
 
 
-void *malloc( size_t size){
-	return requestChunck(size);
-}
