@@ -39,13 +39,13 @@ void *splitChunck(struct __memoryChunck *c, unsigned int requestByte){
 	return c->data;
 }
 
-void *requireNewChunck(){
+void *requireNewChunck(unsigned int numPage){
 	 struct __memoryChunck *new;
-	 new = (struct __memoryChunck *) HeapAlloc(GetProcessHeap(), 0, BASEALLOC);
+	 new = (struct __memoryChunck *) HeapAlloc(GetProcessHeap(), 0, numPage*BASEALLOC);
 	 if( new == NULL)
 		 return NULL;
 	 new->data = (void *)new + sizeof(struct __memoryChunck);
-	 new->size = BASEALLOC - sizeof(struct __memoryChunck);
+	 new->size = numPage*BASEALLOC - sizeof(struct __memoryChunck);
 	 new->free = 1;
 	 new->next = NULL;
 
@@ -55,19 +55,10 @@ void *requireNewChunck(){
 void *malloc(size_t size){
 	struct __memoryChunck *p , *prec;
 
-	if(size > BASEALLOC){
-		p = HeapAlloc(GetProcessHeap(), 0, size);
-		p->next = NULL;
-		p->size = size;
-		p->free = 0;
-		p->data = (void *)p + sizeof(struct __memoryChunck);
-		return p->data;
-	}
-
 	p = poolChunck;
 
 	if(p == NULL){
-		p = requireNewChunck();
+		p = requireNewChunck( 1);
 		if(p == NULL)
 			return NULL;
 		poolChunck = p;
@@ -75,7 +66,7 @@ void *malloc(size_t size){
 
 	while(1){
 		if(p == NULL){
-			p = requireNewChunck();
+			p = requireNewChunck( (size/BASEALLOC) +1);
 			if(p == NULL)
 				return NULL;
 			prec->next = p;
