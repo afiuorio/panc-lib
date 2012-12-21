@@ -1,5 +1,5 @@
 /*
- * bsearch.c
+ * memAlloc.c
  *
  * Author: Andrea Francesco Iuorio
  * 		   Student at Computer Science, Università degli Studi di Milano
