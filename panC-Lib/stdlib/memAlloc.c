@@ -1,14 +1,15 @@
 /*
- * memAlloc.c
+ * bsearch.c
  *
- *  Created on: 18/dic/2012
- *      Author: AndreaFrancesco
+ * Author: Andrea Francesco Iuorio
+ * 		   Student at Computer Science, Università degli Studi di Milano
+ * 		   andreafrancesco.iuorio@gmail.com
+ *
+ * Create on: 18/dec/2012
  */
 
 #include <windows.h>
 #include "stdlib.h"
-
-
 
 struct __memoryChunck{
 	struct __memoryChunck *next;
@@ -17,11 +18,9 @@ struct __memoryChunck{
 	unsigned int free;
 };
 
-struct __memoryChunck *poolChunck = NULL;
+struct __memoryChunck *__poolChunck = NULL;
 
-#define BASEALLOC 4096
-
-
+#define __PAGEMEMORY 4096
 
 void *splitChunck(struct __memoryChunck *c, unsigned int requestByte){
 	struct __memoryChunck *new;
@@ -41,38 +40,35 @@ void *splitChunck(struct __memoryChunck *c, unsigned int requestByte){
 
 void *requireNewChunck(unsigned int numPage){
 	 struct __memoryChunck *new;
-	 new = (struct __memoryChunck *) HeapAlloc(GetProcessHeap(), 0, numPage*BASEALLOC);
+	 new = (struct __memoryChunck *) HeapAlloc(GetProcessHeap(), 0, numPage*__PAGEMEMORY);
 	 if( new == NULL)
 		 return NULL;
 	 new->data = (void *)new + sizeof(struct __memoryChunck);
-	 new->size = numPage*BASEALLOC - sizeof(struct __memoryChunck);
+	 new->size = numPage*__PAGEMEMORY - sizeof(struct __memoryChunck);
 	 new->free = 1;
 	 new->next = NULL;
 
 	 return new;
 }
 
+void __initMemoryPool(){
+	if(__poolChunck == NULL)
+			__poolChunck = requireNewChunck(1);
+}
+
 void *malloc(size_t size){
 	struct __memoryChunck *p , *prec;
 
-	p = poolChunck;
-
-	if(p == NULL){
-		p = requireNewChunck( 1);
-		if(p == NULL)
-			return NULL;
-		poolChunck = p;
-	}
+	__initMemoryPool();
+	p = __poolChunck;
 
 	while(1){
 		if(p == NULL){
-			p = requireNewChunck( (size/BASEALLOC) +1);
+			p = requireNewChunck( (size/__PAGEMEMORY) +1);
 			if(p == NULL)
 				return NULL;
 			prec->next = p;
 		}
-
-
 		if(p->size == size && p->free == 1){
 			p->free = 0;
 			return p->data;
@@ -83,8 +79,11 @@ void *malloc(size_t size){
 			prec = p;
 			p = p->next;
 		}
-
-
 	}
 	return NULL;
+}
+
+void free(void *ptr){
+	struct __memoryChunck *data = ptr - sizeof(struct __memoryChunck);
+	data->free = 1;
 }

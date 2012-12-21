@@ -10,12 +10,14 @@ register int i;
 
 	int *newHeap = malloc(13);
 	printf("%X\n",newHeap);
-	newHeap = malloc(13);
+	newHeap = malloc(17);
 		printf("%X\n",newHeap);
-		newHeap[0] = 4;
-		printf("%d\n",newHeap[0]);
+		newHeap[3] = 4;
+		printf("%d\n",newHeap[3]);
 		newHeap = malloc(13);
 			printf("%X\n",newHeap);
+			newHeap = malloc(30000);
+						printf("%X\n",newHeap);
 
 
 
