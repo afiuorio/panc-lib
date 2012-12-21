@@ -7,16 +7,14 @@
 int main(void) {
 register int i;
 
-	int *newHeap = malloc(13);
+	int *newHeap = malloc(16);
+	newHeap[3] = 4;
 	printf("%X\n",newHeap);
-	newHeap = malloc(17);
-		printf("%X\n",newHeap);
-		newHeap[3] = 4;
-		printf("%d\n",newHeap[3]);
-		newHeap = malloc(13);
-			printf("%X\n",newHeap);
-			newHeap = malloc(30000);
-						printf("%X\n",newHeap);
+	newHeap = realloc(newHeap,20);
+	printf("%X\n",newHeap);
+	printf("%d\n",newHeap[3]);
+
+
 
 
 

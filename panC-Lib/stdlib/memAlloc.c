@@ -83,6 +83,21 @@ void *malloc(size_t size){
 	return NULL;
 }
 
+void *realloc (void *p, size_t size){
+	void *ptrRet = malloc(size);
+	if(ptrRet == NULL)
+		return NULL;
+	struct __memoryChunck *headerP = p - sizeof(struct __memoryChunck);
+	headerP->free = 1;	/*TODO: Maybe i can use a free instead ?*/
+	int minSize = size <= headerP->size ? size : headerP->size;
+	register int i;
+	for( i = 0; i < minSize; i++)	/*Not very nice, but can work*/
+		((char *)ptrRet)[i] = ((char *)p)[i];
+	return ptrRet;
+}
+
+
+
 void free(void *ptr){
 	struct __memoryChunck *data = ptr - sizeof(struct __memoryChunck);
 	data->free = 1;
