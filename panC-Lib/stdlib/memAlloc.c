@@ -96,7 +96,11 @@ void *realloc (void *p, size_t size){
 	return ptrRet;
 }
 
-
+/*TODO we need a better free function.*/
+void free(void *p){
+	struct __memoryChunck *act = p - sizeof(struct __memoryChunck);
+	act->free = 1;
+}
 
 void free(void *ptr){
 	struct __memoryChunck *data = ptr - sizeof(struct __memoryChunck);
