@@ -102,7 +102,8 @@ void free(void *p){
 	act->free = 1;
 }
 
+/*
 void free(void *ptr){
 	struct __memoryChunck *data = ptr - sizeof(struct __memoryChunck);
 	data->free = 1;
-}
+}*/
