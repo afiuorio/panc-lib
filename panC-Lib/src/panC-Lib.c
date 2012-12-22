@@ -2,21 +2,31 @@
 #include "stdlib.h"
 #include "string.h"
 #include<windows.h>
+#include<time.h>
 
+#define DIM 10
+
+int compareInt (const void * a, const void * b)
+{
+  return ( *(int*)a - *(int*)b );
+}
 
 int main(void) {
 register int i;
 
-	int *newHeap = malloc(16);
-	newHeap[3] = 4;
-	printf("%X\n",newHeap);
-	newHeap = realloc(newHeap,20);
-	printf("%X\n",newHeap);
-	printf("%d\n",newHeap[3]);
+int *vector = malloc(DIM*sizeof(int));
 
-
-
-
+	srand(time(NULL));
+	for(i=0; i<DIM; i++){
+		vector[i] = rand();
+		printf("%d ",vector[i]);
+	}
+	printf("\n");
+	qsort(vector, DIM,sizeof(int), compareInt );
+	printf("\n");
+	for(i=0; i <DIM; i++){
+		printf("%d ",vector[i]);
+	}
 
 
 
