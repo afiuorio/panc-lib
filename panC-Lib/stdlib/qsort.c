@@ -15,10 +15,10 @@ typedef struct{
 	unsigned int high;
 }__qsort_stack_node;
 
-#define STACK_SIZE        (8 * sizeof(unsigned int))
-#define PUSH(l, h)        ((void) ((top->low = (l)), (top->high = (h)), ++top))
-#define        POP(l, h)        ((void) (--top, (l = top->low), (h = top->high)))
-#define        STACK_NOT_EMPTY        (stack < top)
+#define STACK_SIZE  (8 * sizeof(unsigned int))
+#define PUSH(l, h)  (top->low = l, top->high = h, top++)
+#define POP(l, h)   (--top, l = top->low, h = top->high)
+#define STACK_NOT_EMPTY   stack < top
 
 void swap(void *a, void *b, unsigned int size){
 	register int i = 0;

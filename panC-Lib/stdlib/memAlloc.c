@@ -11,6 +11,12 @@
 #include <windows.h>
 #include "stdlib.h"
 
+/*Memory allocation using a simple chunk linked-list first-fit allocator.
+ * If there isn't a chunk enough big, the program required enough memory page for the allocation.
+ *
+ * Actually, the free function doesn' t release any memory, just set the free flag of a chunk. This increment fragmentation e must be resolve
+ */
+
 struct __memoryChunck{
 	struct __memoryChunck *next;
 	unsigned int size;
@@ -18,7 +24,7 @@ struct __memoryChunck{
 	unsigned int free;
 };
 
-struct __memoryChunck *__poolChunck = NULL;
+static struct __memoryChunck *__poolChunck = NULL;
 
 #define __PAGEMEMORY 4096
 
@@ -89,21 +95,15 @@ void *realloc (void *p, size_t size){
 		return NULL;
 	struct __memoryChunck *headerP = p - sizeof(struct __memoryChunck);
 	headerP->free = 1;	/*TODO: Maybe i can use a free instead ?*/
-	int minSize = size <= headerP->size ? size : headerP->size;
+	int minSize = (size <= headerP->size) ? size : headerP->size;
 	register int i;
 	for( i = 0; i < minSize; i++)	/*Not very nice, but can work*/
 		((char *)ptrRet)[i] = ((char *)p)[i];
 	return ptrRet;
 }
 
-/*TODO we need a better free function.*/
+/*TODO we need a free function.*/
 void free(void *p){
 	struct __memoryChunck *act = p - sizeof(struct __memoryChunck);
 	act->free = 1;
 }
-
-/*
-void free(void *ptr){
-	struct __memoryChunck *data = ptr - sizeof(struct __memoryChunck);
-	data->free = 1;
-}*/
